@@ -2,7 +2,7 @@ from pyspark import SparkContext
 from pyspark.sql import SparkSession, SQLContext
 from pyspark.streaming import StreamingContext
 from dataloader import DataLoader
-from utils.feature_extractors import *
+from models.utils.feature_extractors import *
 import numpy as np
 
 class SparkConfig:
