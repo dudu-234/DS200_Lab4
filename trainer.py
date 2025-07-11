@@ -36,10 +36,13 @@ class Trainer:
         )
 
         self.feature_cols = [
+            "vendor_id",
             "pickup_latitude",
             "pickup_longitude",
             "dropoff_latitude",
             "dropoff_longitude",
+            "passenger_count",
+            "pickup_date",
             "pickup_hour",
             "pickup_minute",
             "pickup_weekday",
@@ -55,12 +58,14 @@ class Trainer:
             "pickup_lat_rotated",
             "pickup_lon_rotated",
             "dropoff_lat_rotated",
-            "dropoff_lon_rotated"
+            "dropoff_lon_rotated",
+            "store_and_fwd_flag"
         ]
 
     def run(self):
         df = self.dataloader.parse_stream()
         
+        df = categorise(df)
         df = extract_datetime(df)
         df = extract_distance(df)
         df = extract_direction(df)
@@ -77,6 +82,9 @@ class Trainer:
             pdf = batch_df.select(
                 *(self.feature_cols + ["trip_duration"])
             ).toPandas()
+
+            pdf["vendor_id"] = pdf["vendor_id"].astype("category")
+            pdf["store_and_fwd_flag"] = pdf["store_and_fwd_flag"].astype("category")
 
             X = pdf[self.feature_cols]
             y = pdf["trip_duration"]

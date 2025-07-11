@@ -20,9 +20,16 @@ if __name__ == "__main__":
     )
 
     if args.model == "xgb":
-        model = XGBWarmStart(model_path=f"{args.model_dir}/xgb_model.pkl", device="cuda")
+        model = XGBWarmStart(
+            model_path=f"{args.model_dir}/xgb_model.pkl", 
+            enable_categorical=True,
+            device="cuda"
+        )
     elif args.model == "lgbm":
-        model = LGBMWarmStart(model_path=f"{args.model_dir}/lgbm_model.pkl", device="gpu")
+        model = LGBMWarmStart(
+            model_path=f"{args.model_dir}/lgbm_model.pkl", 
+            device="gpu"
+        )
 
     trainer = Trainer(model=model, mode=args.mode, spark_config=spark_config)
     trainer.run()

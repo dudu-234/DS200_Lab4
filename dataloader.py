@@ -43,7 +43,7 @@ class DataLoader:
             .format("kafka") \
             .option("kafka.bootstrap.servers", self.kafka_broker) \
             .option("subscribe", self.kafka_topic) \
-            .option("startingOffsets", "earliest") \
+            .option("startingOffsets", "latest") \
             .load()
         
         json_df = kafka_stream.selectExpr("CAST(value AS STRING) as json_str")

@@ -4,13 +4,17 @@ from pyspark.sql.types import DoubleType
 from pyspark.sql import DataFrame
 import math
 
+def categorise(df: DataFrame) -> DataFrame:
+    df = df.withColumn("store_and_fwd_flag", F.when(col("store_and_fwd_flag") == "N", 0).otherwise(1))
+    return df
+
 def extract_datetime(df: DataFrame) -> DataFrame:
     df = df.withColumn("pickup_datetime", F.to_timestamp("pickup_datetime"))
 
     if "dropoff_datetime" in df.columns:
         df = df.withColumn("dropoff_datetime", F.to_timestamp("dropoff_datetime"))
 
-    df = df.withColumn("pickup_dt", F.to_date("pickup_datetime"))
+    df = df.withColumn("pickup_date", F.dayofmonth("pickup_datetime"))
     df = df.withColumn("pickup_hour", F.hour("pickup_datetime"))
     df = df.withColumn("pickup_minute", F.minute("pickup_datetime"))
     df = df.withColumn("pickup_weekday", F.dayofweek("pickup_datetime"))
